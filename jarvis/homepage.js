@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
     fontSize: 60,
     color: '#fff',
     fontWeight: 'bold',
-    fontFamily: 'Poppins',
+    fontFamily: 'Poppins_700Bold',
   },
   toggleContainer: {
     flexDirection: 'row',
