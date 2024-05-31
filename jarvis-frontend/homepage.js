@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, View, Switch, Platform, TouchableWithoutFeedback, Keyboard, Modal, TouchableOpacity, Button } from 'react-native';
+import { StyleSheet, Text, TextInput, View, Switch, Platform, TouchableWithoutFeedback, Keyboard, Modal, TouchableOpacity, Button, Alert } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function HomePage() {
@@ -34,6 +34,41 @@ export default function HomePage() {
     setPriority("placeholder");
     setTaskName("");
     setCategory("");
+  };
+
+  const handleSubmit = () => {
+    if (!taskName || !date || !category || priority === "placeholder") {
+      Alert.alert("Error", "Please fill all the fields");
+      return;
+    }
+
+    const task = {
+      name: taskName,
+      dueDate: date.toISOString().split('T')[0], // Format date to YYYY-MM-DD
+      category: category,
+      priority: priority
+    };
+
+    const backendUrl = Platform.OS === 'android' ? 'http://10.0.2.2:8080/tasks' : 'http://localhost:8080/tasks';
+
+    fetch(backendUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(task)
+    })
+    .then(response => response.json())
+    .then(data => {
+      // Handle response data
+      console.log('Task created:', data);
+      Alert.alert("Success", "Task created successfully!");
+      resetInputs();
+    })
+    .catch(error => {
+      console.error('Error creating task:', error);
+      Alert.alert("Error", "Failed to create task. Please check your network connection and backend server.");
+    });
   };
 
   return (
@@ -71,13 +106,14 @@ export default function HomePage() {
                 value={taskName}
                 onChangeText={setTaskName}
               />
-              <TextInput
+              <TouchableOpacity
                 style={styles.smallInput}
-                placeholder="Due Date"
-                placeholderTextColor="#ccc"
-                value={date ? formatDate(date) : ""}
-                onFocus={() => setShowDatePicker(true)}
-              />
+                onPress={() => setShowDatePicker(true)}
+              >
+                <Text style={date ? styles.inputText : styles.placeholderText}>
+                  {date ? formatDate(date) : "Due Date"}
+                </Text>
+              </TouchableOpacity>
               {showDatePicker && (
                 <DateTimePicker
                   testID="dateTimePicker"
@@ -129,7 +165,10 @@ export default function HomePage() {
                 </Modal>
               )}
             </View>
-            <Button title="Reset" onPress={resetInputs} color="#841584" />
+            <View style={styles.buttonRow}>
+              <Button title="Reset" onPress={resetInputs} color="grey" />
+              <Button title="Submit" onPress={handleSubmit} color="grey" />
+            </View>
           </View>
         )}
       </View>
@@ -200,6 +239,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     paddingHorizontal: 10,
     color: '#000',
+    justifyContent: 'center',
   },
   priorityInput: {
     justifyContent: 'center',
@@ -226,5 +266,10 @@ const styles = StyleSheet.create({
   modalItemText: {
     fontSize: 18,
     color: '#000',
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 20,
   },
 });
