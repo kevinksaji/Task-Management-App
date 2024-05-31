@@ -1,9 +1,9 @@
 package com.example.jarvis.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.Entity; // This annotation is used to mark a class as a JPA entity, will be mapped to a table in the database
+import jakarta.persistence.GeneratedValue; // This annotation is used to specify the primary key generation strategy for an entity
+import jakarta.persistence.GenerationType; // This enum provides strategies for generating primary keys, auto-incremented
+import jakarta.persistence.Id; // This annotation is used to specify the primary key of an entity
 
 @Entity
 public class Task {
