@@ -1,11 +1,18 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useFonts, Poppins_400Regular, Poppins_700Bold } from '@expo-google-fonts/poppins';
 import * as SplashScreen from 'expo-splash-screen';
-import HomePage from './homepage';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+
+import TaskEntry from './screens/TaskEntry';
+import Login from './screens/user-login-signup/Login';
+import SignUp from './screens/user-login-signup/SignUp';
 
 // Prevent the splash screen from auto hiding
 SplashScreen.preventAutoHideAsync();
+
+const Stack = createStackNavigator();
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -26,7 +33,13 @@ export default function App() {
 
   return (
     <View style={styles.container} onLayout={onLayoutRootView}>
-      <HomePage />
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Login">
+          <Stack.Screen name="Login" component={Login} options={{ title: 'Login' }} />
+          <Stack.Screen name="SignUp" component={SignUp} options={{ title: 'Sign Up' }} />
+          <Stack.Screen name="TaskEntry" component={TaskEntry} options={{ title: 'Task Entry' }} />
+        </Stack.Navigator>
+      </NavigationContainer>
     </View>
   );
 }

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, View, Switch, Platform, TouchableWithoutFeedback, Keyboard, Modal, TouchableOpacity, Button, Alert } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-export default function HomePage() {
+export default function TaskEntry() {
   const [isAuto, setIsAuto] = useState(true);
   const [date, setDate] = useState(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
