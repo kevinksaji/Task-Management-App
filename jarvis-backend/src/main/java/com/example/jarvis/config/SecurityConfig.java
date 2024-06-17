@@ -15,10 +15,14 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 
-@Configuration
-@EnableWebSecurity
+@Configuration // the class can be used by the Spring IoC container as a source of bean
+               // definitions
+@EnableWebSecurity // enables Spring Security’s web security support and provides the Spring MVC
+                   // integration
 public class SecurityConfig {
 
+    // these fields hold references to the CustomUserDetailsService and JwtFilter
+    // that are injected into the SecurityConfig class
     private final CustomUserDetailsService userDetailsService;
     private final JwtFilter jwtFilter;
 
@@ -27,28 +31,26 @@ public class SecurityConfig {
         this.jwtFilter = jwtFilter;
     }
 
-    @Bean
-public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-    AuthenticationManagerBuilder authenticationManagerBuilder = 
-        http.getSharedObject(AuthenticationManagerBuilder.class);
-    authenticationManagerBuilder.userDetailsService(userDetailsService)
-                               .passwordEncoder(passwordEncoder());
-    return authenticationManagerBuilder.build();
-}
+    @Bean // AuthenticationManager bean is created and returned by this method
+    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+        AuthenticationManagerBuilder authenticationManagerBuilder = http
+                .getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder.userDetailsService(userDetailsService)
+                .passwordEncoder(passwordEncoder());
+        return authenticationManagerBuilder.build();
+    }
 
     @Bean
-public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    http.csrf(AbstractHttpConfigurer::disable)
-        .authorizeHttpRequests((authz) -> authz
-            .requestMatchers("/auth/**").permitAll() // This line permits all requests to /auth/**
-            .anyRequest().authenticated()
-        )
-        .sessionManagement((session) -> session
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        );
-    http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-    return http.build();
-}
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests((authz) -> authz
+                        .requestMatchers("/auth/**").permitAll() // This line permits all requests to /auth/**
+                        .anyRequest().authenticated())
+                .sessionManagement((session) -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+        return http.build();
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
