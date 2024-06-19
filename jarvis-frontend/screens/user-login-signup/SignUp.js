@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet, Button, Platform } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet, Platform } from 'react-native';
 
 export default function SignUp({ navigation }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
 
   const handleSignUp = () => {
-    const backendUrl = Platform.OS === 'android' ? 'http://10.0.2.2:8080/auth/register' : 'http://localhost:8080/auth/register';
+    const backendUrl = Platform.OS === 'android' ? 'http://10.0.2.2:8080/user' : 'http://localhost:8080/user';
 
     fetch(backendUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify({ username, password, email }),
     })
     .then(response => response.json())
     .then(data => {
@@ -47,6 +48,13 @@ export default function SignUp({ navigation }) {
         value={password}
         onChangeText={setPassword}
         secureTextEntry
+        style={styles.input}
+        placeholderTextColor="#ccc"
+      />
+      <TextInput
+        placeholder="Email"
+        value={email}
+        onChangeText={setEmail}
         style={styles.input}
         placeholderTextColor="#ccc"
       />

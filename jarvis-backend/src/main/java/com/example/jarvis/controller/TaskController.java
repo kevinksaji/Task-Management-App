@@ -53,5 +53,12 @@ public class TaskController {
         taskService.deleteTask(id); // The deleteTask method is called from the TaskService class
         return ResponseEntity.noContent().build(); // This method returns a ResponseEntity with no content
     }
+
+    // delete all tasks
+    @DeleteMapping // This annotation will be used to handle DELETE requests to the "/tasks" endpoint, so that we can delete all tasks
+    public ResponseEntity<Void> deleteAllTasks() {
+        taskService.deleteAllTasks(); // The deleteAllTasks method is called from the TaskService class
+        return ResponseEntity.noContent().build(); // This method returns a ResponseEntity with no content
+    }
 }
 

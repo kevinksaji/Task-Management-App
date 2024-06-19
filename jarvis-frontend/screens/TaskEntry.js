@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, View, Switch, Platform, TouchableWithoutFeedback, Keyboard, Modal, TouchableOpacity, Button, Alert } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-export default function TaskEntry() {
+export default function TaskEntry({ route }) {
   const [isAuto, setIsAuto] = useState(true);
   const [date, setDate] = useState(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -10,6 +10,8 @@ export default function TaskEntry() {
   const [showPriorityPicker, setShowPriorityPicker] = useState(false);
   const [taskName, setTaskName] = useState("");
   const [category, setCategory] = useState("");
+
+  const { username } = route.params;
 
   const toggleSwitch = () => setIsAuto(previousState => !previousState);
 
@@ -75,7 +77,7 @@ export default function TaskEntry() {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>Jarvis.</Text>
+          <Text style={styles.title}>Welcome, {username}</Text>
         </View>
         <View style={styles.toggleContainer}>
           <Text style={styles.toggleLabel}>Manual</Text>
@@ -152,7 +154,7 @@ export default function TaskEntry() {
                     <View style={styles.modalOverlay} />
                   </TouchableWithoutFeedback>
                   <View style={styles.modalContent}>
-                    {["low", "medium", "high"].map(item => (
+                    {["Low", "Medium", "High"].map(item => (
                       <TouchableOpacity
                         key={item}
                         style={styles.modalItem}
@@ -189,7 +191,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   title: {
-    fontSize: 60,
+    fontSize: 30,
     color: '#fff',
     fontWeight: 'bold',
     fontFamily: 'Poppins_700Bold',

@@ -40,4 +40,9 @@ public class TaskService {
     public void deleteTask(Long id) { // This method deletes a task by its id
         taskRepository.deleteById(id);
     }
+
+    // delete all tasks
+    public void deleteAllTasks() {
+        taskRepository.deleteAll();
+    }
 }

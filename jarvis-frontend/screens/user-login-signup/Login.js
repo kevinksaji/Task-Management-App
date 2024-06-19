@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet, Button, Platform } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet, Platform } from 'react-native';
 
 export default function Login({ navigation }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
   const handleSignIn = () => {
-    const backendUrl = Platform.OS === 'android' ? 'http://10.0.2.2:8080/auth/login' : 'http://localhost:8080/auth/login';
+    const backendUrl = Platform.OS === 'android' ? 'http://10.0.2.2:8080/user/login' : 'http://localhost:8080/user/login';
 
     fetch(backendUrl, {
       method: 'POST',
@@ -17,8 +17,8 @@ export default function Login({ navigation }) {
     })
     .then(response => response.json())
     .then(data => {
-      if (data.success) {
-        navigation.navigate('TaskEntry');
+      if (data.id) {
+        navigation.navigate('TaskEntry', { username: username });
       } else {
         Alert.alert('Error', 'Invalid username or password');
       }
