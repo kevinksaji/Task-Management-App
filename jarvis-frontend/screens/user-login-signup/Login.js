@@ -18,7 +18,7 @@ export default function Login({ navigation }) {
     .then(response => response.json())
     .then(data => {
       if (data.id) {
-        navigation.navigate('TaskEntry', { username: username });
+        navigation.navigate('AllTasks', { username: username });
       } else {
         Alert.alert('Error', 'Invalid username or password');
       }

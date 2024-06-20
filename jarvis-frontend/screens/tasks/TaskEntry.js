@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, View, Switch, Platform, TouchableWithoutFeedback, Keyboard, Modal, TouchableOpacity, Button, Alert } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-export default function TaskEntry({ route }) {
+export default function TaskEntry({ navigation, route }) {
   const [isAuto, setIsAuto] = useState(true);
   const [date, setDate] = useState(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -77,7 +77,7 @@ export default function TaskEntry({ route }) {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>Welcome, {username}</Text>
+          <Text style={styles.title}>Jarvis.</Text>
         </View>
         <View style={styles.toggleContainer}>
           <Text style={styles.toggleLabel}>Manual</Text>
@@ -154,7 +154,7 @@ export default function TaskEntry({ route }) {
                     <View style={styles.modalOverlay} />
                   </TouchableWithoutFeedback>
                   <View style={styles.modalContent}>
-                    {["Low", "Medium", "High"].map(item => (
+                    {["low", "medium", "high"].map(item => (
                       <TouchableOpacity
                         key={item}
                         style={styles.modalItem}
@@ -173,6 +173,9 @@ export default function TaskEntry({ route }) {
             </View>
           </View>
         )}
+        <TouchableOpacity onPress={() => navigation.navigate('Tasks')} style={styles.link}>
+          <Text style={styles.linkText}>View All Tasks</Text>
+        </TouchableOpacity>
       </View>
     </TouchableWithoutFeedback>
   );

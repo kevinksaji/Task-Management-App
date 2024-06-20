@@ -1,11 +1,13 @@
 package com.example.jarvis.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.jarvis.model.Task;
 import com.example.jarvis.repository.TaskRepository;
+import java.util.Comparator;
 
 @Service
 public class TaskService {
@@ -13,9 +15,32 @@ public class TaskService {
     @Autowired // This annotation tells Spring to inject an instance of TaskRepository into this class
     private TaskRepository taskRepository;
 
-    public List<Task> getAllTasks() { // This method returns a list of all tasks
-        return taskRepository.findAll();
+    public List<Task> getAllTasks(String sortBy) { 
+         List<Task> tasks = taskRepository.findAll();
+
+        if (sortBy != null) {
+            switch (sortBy) {
+                case "priority":
+                    tasks = tasks.stream()
+                            .sorted(Comparator.comparing(Task::getPriority))
+                            .collect(Collectors.toList());
+                    break;
+                case "dueDate":
+                    tasks = tasks.stream()
+                            .sorted(Comparator.comparing(Task::getDueDate))
+                            .collect(Collectors.toList());
+                    break;
+                case "category":
+                    tasks = tasks.stream()
+                            .sorted(Comparator.comparing(Task::getCategory))
+                            .collect(Collectors.toList());
+                    break;
+            }
+        }
+
+        return tasks;
     }
+    
 
     public Task getTaskById(Long id) { // This method returns a task by its id
         return taskRepository.findById(id).orElse(null);

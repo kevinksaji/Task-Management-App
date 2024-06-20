@@ -5,9 +5,10 @@ import * as SplashScreen from 'expo-splash-screen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import TaskEntry from './screens/TaskEntry';
+import TaskEntry from './screens/tasks/TaskEntry';
 import Login from './screens/user-login-signup/Login';
 import SignUp from './screens/user-login-signup/SignUp';
+import AllTasks from './screens/tasks/AllTasks';
 
 // Prevent the splash screen from auto hiding
 SplashScreen.preventAutoHideAsync();
@@ -38,6 +39,7 @@ export default function App() {
           <Stack.Screen name="Login" component={Login} options={{ title: 'Login' }} />
           <Stack.Screen name="SignUp" component={SignUp} options={{ title: 'Sign Up' }} />
           <Stack.Screen name="TaskEntry" component={TaskEntry} options={{ title: 'Task Entry' }} />
+          <Stack.Screen name="AllTasks" component={AllTasks} options={{ title: 'All Tasks' }} />
         </Stack.Navigator>
       </NavigationContainer>
     </View>

@@ -21,8 +21,8 @@ public class TaskController {
     private TaskService taskService;
 
     @GetMapping // This annotation will be used to handle GET requests to the "/tasks" endpoint
-    public List<Task> getAllTasks() {
-        return taskService.getAllTasks(); // The getallTasks method is called from the TaskService class
+    public List<Task> getAllTasks(@RequestParam(required = false) String sortBy){
+        return taskService.getAllTasks(sortBy); // The getallTasks method is called from the TaskService class
     }
 
     @GetMapping("/{id}") // This annotation will be used to handle GET requests to the "/tasks/{id}" endpoint, so that we can get a task by its id
