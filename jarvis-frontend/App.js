@@ -9,6 +9,7 @@ import TaskEntry from './screens/tasks/TaskEntry';
 import Login from './screens/user-login-signup/Login';
 import SignUp from './screens/user-login-signup/SignUp';
 import AllTasks from './screens/tasks/AllTasks';
+import CompletedTasks from './screens/tasks/CompletedTasks';
 
 // Prevent the splash screen from auto hiding
 SplashScreen.preventAutoHideAsync();
@@ -40,6 +41,7 @@ export default function App() {
           <Stack.Screen name="SignUp" component={SignUp} options={{ title: 'Sign Up' }} />
           <Stack.Screen name="TaskEntry" component={TaskEntry} options={{ title: 'Task Entry' }} />
           <Stack.Screen name="AllTasks" component={AllTasks} options={{ title: 'All Tasks' }} />
+          <Stack.Screen name="CompletedTasks" component={CompletedTasks} options={{ title: 'Completed Tasks' }} />
         </Stack.Navigator>
       </NavigationContainer>
     </View>

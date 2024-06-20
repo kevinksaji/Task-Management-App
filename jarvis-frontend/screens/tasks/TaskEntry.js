@@ -71,6 +71,8 @@ export default function TaskEntry({ navigation, route }) {
       console.error('Error creating task:', error);
       Alert.alert("Error", "Failed to create task. Please check your network connection and backend server.");
     });
+    // navigate to the AllTasks screen and send the username as a parameter and refresh the tasks
+    navigation.navigate('AllTasks', { username: username});
   };
 
   return (
@@ -154,7 +156,7 @@ export default function TaskEntry({ navigation, route }) {
                     <View style={styles.modalOverlay} />
                   </TouchableWithoutFeedback>
                   <View style={styles.modalContent}>
-                    {["low", "medium", "high"].map(item => (
+                    {["Low", "Medium", "High"].map(item => (
                       <TouchableOpacity
                         key={item}
                         style={styles.modalItem}
@@ -194,7 +196,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   title: {
-    fontSize: 30,
+    fontSize: 50,
     color: '#fff',
     fontWeight: 'bold',
     fontFamily: 'Poppins_700Bold',
@@ -207,16 +209,16 @@ const styles = StyleSheet.create({
   },
   toggleLabel: {
     color: '#fff',
-    fontSize: 18,
+    fontSize: 25,
     marginHorizontal: 10,
   },
   inputContainer: {
     borderWidth: 1,
-    marginTop: 250,
+    marginTop: 150,
     marginBottom: 20,
   },
   input: {
-    height: 40,
+    height: 50,
     width: '100%',
     borderColor: '#fff',
     borderWidth: 1,
@@ -228,7 +230,7 @@ const styles = StyleSheet.create({
   manualInputContainer: {
     borderWidth: 1,
     padding: 10,
-    marginTop: 200,
+    marginTop: 100,
   },
   row: {
     flexDirection: 'row',
@@ -236,7 +238,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   smallInput: {
-    height: 40,
+    height: 50,
     width: '48%',
     borderColor: '#fff',
     borderWidth: 1,
@@ -245,15 +247,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     color: '#000',
     justifyContent: 'center',
+    fontFamily: 'Poppins_400Regular',
+    fontSize: 18,
   },
   priorityInput: {
     justifyContent: 'center',
   },
   placeholderText: {
     color: '#ccc',
+    fontSize: 18,
+    fontFamily: 'Poppins_400Regular',
+    justifyContent: 'center',
   },
   inputText: {
     color: '#000',
+    fontSize: 18,
+    fontFamily: 'Poppins_400Regular',
   },
   modalOverlay: {
     flex: 1,

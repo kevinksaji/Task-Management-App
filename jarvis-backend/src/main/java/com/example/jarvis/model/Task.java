@@ -15,6 +15,7 @@ public class Task {
     private String dueDate;
     private String category;
     private String priority;
+    public boolean completed;
 
     // Getters and Setters
     public Long getId() {
@@ -56,4 +57,13 @@ public class Task {
     public void setPriority(String priority) {
         this.priority = priority;
     }
+
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
+    }
+
 }
