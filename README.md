@@ -1,4 +1,4 @@
 # Jarvis
 
-Frontend: React Native
-Backend: Java Spring Boot
+- Frontend: React Native
+- Backend: Java Spring Boot
