@@ -62,12 +62,16 @@ public class TaskService {
         return null;
     }
 
-    public void deleteTask(Long id) {
+    public String deleteTask(Long id) {
         taskRepository.deleteById(id);
+        // print message saying task with id is deleted
+        return "Task removed !! " + id;
+        
     }
 
-    public void deleteAllTasks() {
+    public String deleteAllTasks() {
         taskRepository.deleteAll();
+        return "All tasks removed";
     }
 
     public List<Task> getCompletedTasks() {

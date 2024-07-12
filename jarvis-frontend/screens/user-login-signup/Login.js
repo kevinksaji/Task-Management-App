@@ -18,7 +18,7 @@ export default function Login({ navigation }) {
     .then(response => response.json())
     .then(data => {
       if (data.id) {
-        navigation.navigate('AllTasks', { username: username });
+        navigation.navigate('AllTasks', { username: username, firstName: data.firstName, lastName: data.lastName});
       } else {
         Alert.alert('Error', 'Invalid username or password');
       }
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
   titleContainer: {
     alignItems: 'center',
     borderWidth: 1,
-    marginBottom: 20,
+    marginBottom: 50,
   },
   title: {
     fontSize: 60,

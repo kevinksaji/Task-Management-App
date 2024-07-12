@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, View, Switch, Platform, TouchableWithoutFeedback, Keyboard, Modal, TouchableOpacity, Button, Alert } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import axios from 'axios';
 
 export default function TaskEntry({ navigation, route }) {
   const [isAuto, setIsAuto] = useState(true);
@@ -10,8 +11,9 @@ export default function TaskEntry({ navigation, route }) {
   const [showPriorityPicker, setShowPriorityPicker] = useState(false);
   const [taskName, setTaskName] = useState("");
   const [category, setCategory] = useState("");
+  const [inputText, setInputText] = useState("");
 
-  const { username } = route.params;
+  const { username, firstName, lastName } = route.params;
 
   const toggleSwitch = () => setIsAuto(previousState => !previousState);
 
@@ -36,6 +38,7 @@ export default function TaskEntry({ navigation, route }) {
     setPriority("placeholder");
     setTaskName("");
     setCategory("");
+    setInputText("");
   };
 
   const handleSubmit = () => {
@@ -72,8 +75,87 @@ export default function TaskEntry({ navigation, route }) {
       Alert.alert("Error", "Failed to create task. Please check your network connection and backend server.");
     });
     // navigate to the AllTasks screen and send the username as a parameter and refresh the tasks
-    navigation.navigate('AllTasks', { username: username});
+    navigation.navigate('AllTasks', { username: username, firstName: firstName, lastName: lastName });
   };
+
+  const handleAutoSubmit = () => {
+    if (!inputText) {
+      Alert.alert("Error", "Please enter the task details");
+      return;
+    }
+  
+    const openaiUrl = 'https://api.openai.com/v1/chat/completions';
+    const openaiApiKey = 'sk-proj-bptnPanPaSngmQyNa8xxT3BlbkFJ1ZkQqu7RpHpoQSSxwXk1'; // Replace with your actual OpenAI API key
+  
+    const requestData = {
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "user",
+          content: `Extract the following details from this task description: ${inputText}\nTask Name: \nDue Date: \nCategory: \nPriority: `
+        }
+      ],
+      max_tokens: 150,
+      temperature: 0.7
+    };
+  
+    axios.post(openaiUrl, requestData, {
+      headers: {
+        'Authorization': `Bearer ${openaiApiKey}`,
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => {
+      console.log('OpenAI API Response:', response.data);
+  
+      const extractedText = response.data.choices[0].message.content.trim();
+      const taskDetails = extractedText.split('\n').reduce((details, line) => {
+        const [key, ...value] = line.split(':');
+        if (key && value) {
+          details[key.trim().toLowerCase()] = value.join(':').trim();
+        }
+        return details;
+      }, {});
+  
+      const taskData = {
+        name: taskDetails["task name"],
+        dueDate: taskDetails["due date"],
+        category: taskDetails["category"],
+        priority: taskDetails["priority"]
+      };
+  
+      if (!taskData.name || !taskData.dueDate || !taskData.category || !taskData.priority) {
+        Alert.alert("Error", "Failed to extract task details. Please enter valid task information.");
+        return;
+      }
+  
+      const backendUrl = Platform.OS === 'android' ? 'http://10.0.2.2:8080/tasks' : 'http://localhost:8080/tasks';
+  
+      fetch(backendUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(taskData)
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Task created:', data);
+        Alert.alert("Success", "Task created successfully!");
+        resetInputs();
+      })
+      .catch(error => {
+        console.error('Error creating task:', error);
+        Alert.alert("Error", "Failed to create task. Please check your network connection and backend server.");
+      });
+      navigation.navigate('AllTasks', { username: username, firstName: firstName, lastName: lastName });
+    })
+    .catch(error => {
+      console.error('Error with OpenAI API:', error.response ? error.response.data : error.message);
+      Alert.alert("Error", "Failed to process task details. Please check your OpenAI API key and network connection.");
+    });
+  };
+  
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -96,9 +178,12 @@ export default function TaskEntry({ navigation, route }) {
           <View style={styles.inputContainer}>
             <TextInput
               style={styles.input}
-              placeholder="Type here..."
+              placeholder="Type here.."
               placeholderTextColor="#ccc"
+              value={inputText}
+              onChangeText={setInputText}
             />
+            <Button title="Submit" onPress={handleAutoSubmit} color="grey" />
           </View>
         ) : (
           <View style={styles.manualInputContainer}>

@@ -1,14 +1,27 @@
 import { Picker } from "@react-native-picker/picker";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { View, Text, StyleSheet, Platform, TouchableOpacity, Alert, ScrollView } from "react-native";
 import { useFocusEffect } from '@react-navigation/native';
-
 export default function AllTasks({ navigation, route }) {
   const [tasks, setTasks] = useState([]);
   const [sortBy, setSortBy] = useState("dueDate"); // Default sort by due date
   const [selectedTaskId, setSelectedTaskId] = useState(null);
 
-  const { username } = route.params;
+  // i want the first name + last name to be displayed here
+  const { username, firstName, lastName } = route.params;
+  console.log(username, firstName, lastName);
+
+  // i want the page to refresh everytime i navigate to it or focus on it
+  useEffect(() => { fetchTasks(); }, []);
+
+  // i want the page to refresh every time i navigate to it or focus on it
+  useFocusEffect(
+    useCallback(() => {
+      fetchTasks();
+    }, [sortBy])
+  );
+
+
 
   const fetchTasks = () => {
     const backendUrl =
@@ -41,12 +54,6 @@ export default function AllTasks({ navigation, route }) {
     });
   };
 
-  useFocusEffect(
-    React.useCallback(() => {
-      fetchTasks();
-    }, [sortBy])
-  );
-
   const handleCardPress = (id) => {
     if (selectedTaskId === id) {
       setSelectedTaskId(null); // Hide button if same card is pressed again
@@ -57,7 +64,7 @@ export default function AllTasks({ navigation, route }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome, {username}</Text>
+      <Text style={styles.title}>Welcome, {firstName} {lastName}</Text>
       <Picker
         selectedValue={sortBy}
         style={styles.picker}
@@ -115,6 +122,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: '#fff',
     marginBottom: 20,
+    fontFamily: 'Poppins_400Regular',
   },
   picker: {
     height: 50,

@@ -5,6 +5,8 @@ export default function SignUp({ navigation }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
 
   const handleSignUp = () => {
     const backendUrl = Platform.OS === 'android' ? 'http://10.0.2.2:8080/user' : 'http://localhost:8080/user';
@@ -14,7 +16,7 @@ export default function SignUp({ navigation }) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ username, password, email }),
+      body: JSON.stringify({ username, password, email, firstName, lastName}),
     })
     .then(response => response.json())
     .then(data => {
@@ -58,6 +60,20 @@ export default function SignUp({ navigation }) {
         style={styles.input}
         placeholderTextColor="#ccc"
       />
+      <TextInput
+        placeholder="Email"
+        value={firstName}
+        onChangeText={setFirstName}
+        style={styles.input}
+        placeholderTextColor="#ccc"
+      />
+      <TextInput
+        placeholder="Email"
+        value={lastName}
+        onChangeText={setLastName}
+        style={styles.input}
+        placeholderTextColor="#ccc"
+      />
       <TouchableOpacity onPress={handleSignUp} style={styles.button}>
         <Text style={styles.buttonText}>Sign Up</Text>
       </TouchableOpacity>
@@ -77,8 +93,9 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     alignItems: 'center',
+    marginBottom: 50,
     borderWidth: 1,
-    marginBottom: 20,
+    
   },
   title: {
     fontSize: 60,
