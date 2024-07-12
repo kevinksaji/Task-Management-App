@@ -85,7 +85,7 @@ export default function TaskEntry({ navigation, route }) {
     }
   
     const openaiUrl = 'https://api.openai.com/v1/chat/completions';
-    const openaiApiKey = 'sk-proj-bptnPanPaSngmQyNa8xxT3BlbkFJ1ZkQqu7RpHpoQSSxwXk1'; // Replace with your actual OpenAI API key
+    const openaiApiKey = "openai-api-key"; // Replace with your actual OpenAI API key
   
     const requestData = {
       model: "gpt-3.5-turbo",
